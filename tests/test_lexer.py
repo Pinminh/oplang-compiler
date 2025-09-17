@@ -42,3 +42,15 @@ def test_005():
     """
     expected = "EOF"
     assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_006():
+    """Test identifiers"""
+    source = """_ z _abAB_09 BF16z_ lp000_1c"""
+    expected = "_,z,_abAB_09,BF16z_,lp000_1c,EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_007():
+    """Test keywords"""
+    source = """booleanbreakclasscontinuedoelseextendsfloatifintnewstringthenforreturntruefalsevoidnilthisfinalstatictodownto"""
+    expected = "boolean,break,class,continue,do,else,extends,float,if,int,new,string,then,for,return,true,false,void,nil,this,final,static,to,downto,EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
