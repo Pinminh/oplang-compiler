@@ -51,6 +51,12 @@ def test_006():
 
 def test_007():
     """Test keywords"""
-    source = """booleanbreakclasscontinuedoelseextendsfloatifintnewstringthenforreturntruefalsevoidnilthisfinalstatictodownto"""
+    source = "boolean break class continue do else extends float if int new string then for return true false void nil this final static to downto"
     expected = "boolean,break,class,continue,do,else,extends,float,if,int,new,string,then,for,return,true,false,void,nil,this,final,static,to,downto,EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_008():
+    """Test operators, separators, specials"""
+    source = """ + - * / \\ % == != < > <= >= || && ! ^ new [ ] { } ( ) ; : . , ~ & """
+    expected = "+,-,*,/,\\,%,==,!=,<,>,<=,>=,||,&&,!,^,new,[,],{,},(,),;,:,.,,,~,&,EOF"
     assert Tokenizer(source).get_tokens_as_string() == expected

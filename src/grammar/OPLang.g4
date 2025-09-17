@@ -61,10 +61,44 @@ STATIC: 'static' ;
 TO: 'to' ;
 DOWNTO: 'downto' ;
 
-// Identifiers
-// ID: [A-Za-z_] [A-Za-z_0-9]* ;
+// Operators
+ADD: '+' ;
+SUB: '-' ;
+MUL: '*' ;
+FLT_DIV: '/' ;
+INT_DIV: '\\' ;
+MOD: '%' ;
+NEQ: '!=' ;
+EQ: '==' ;
+LT: '<' ;
+GT: '>' ;
+LEQ: '<=' ;
+GEQ: '>=' ;
+OR: '||' ;
+AND: '&&' ;
+NOT: '!' ;
+CONCAT: '^' ;
 
-WS : [ \t\r\n\f]+ -> skip ; // skip spaces, tabs 
+// Separators
+LSB: '[' ;
+RSB: ']' ;
+LB: '{' ;
+RB: '}' ;
+LP: '(' ;
+RP: ')' ;
+SEMI: ';' ;
+COLON: ':' ;
+DOT: '.' ;
+COMMA: ',' ;
+
+// Specials
+TILDE: '~' ;        // for destructor declaration
+AMPERSAND: '&' ;    // for reference declaration
+
+// Identifiers
+ID: [A-Za-z_] [A-Za-z_0-9]* ;
+
+WS : [ \t\r\n\f]+ -> skip ; // skip spaces, tabs, newlines, formfeeds
 
 // Lexical errors
 ERROR_CHAR: .;
