@@ -965,21 +965,73 @@ def test_095():
     assert Tokenizer(source).get_tokens_as_string() == expected
 
 def test_096():
-    """Operators combined with assignments and references"""
-    source = r'''class Ops2 { void o(){ x := y + z * (a - b) ^ c; } }'''
-    expected = 'class,Ops2,{,void,o,(,),{,x,:=,y,+,z,*,(,a,-,b,),^,c,;,},},EOF'
+    """Test a complex for loop with downto and a block statement"""
+    source = r'''
+    class Looping {
+        void countdown() {
+            for i := 10 downto 0 do {
+                io.writeInt(i);
+                if i == 0 then {
+                    io.writeStr("Blast off!");
+                }
+            }
+        }
+    }
+    '''
+    expected = 'class,Looping,{,void,countdown,(,),{,for,i,:=,10,downto,0,do,{,io,.,writeInt,(,i,),;,if,i,==,0,then,{,io,.,writeStr,(,"Blast off!",),;,},},},},EOF'
     assert Tokenizer(source).get_tokens_as_string() == expected
 
 def test_097():
-    """Use of NIL, THIS and NEW in expressions"""
-    source = r'''class Use { void u(){ x := new A(); if (x == nil) then this.doIt(); } }'''
-    expected = 'class,Use,{,void,u,(,),{,x,:=,new,A,(,),;,if,(,x,==,nil,),then,this,.,doIt,(,),;,},},EOF'
+    """Test a complex if-then-else statement with nested blocks"""
+    source = r'''
+    class Conditions {
+        void check(int x) {
+            if x > 0 then {
+                io.writeStr("Positive");
+            } else {
+                if x < 0 then {
+                    io.writeStr("Negative");
+                } else {
+                    io.writeStr("Zero");
+                }
+            }
+        }
+    }
+    '''
+    expected = 'class,Conditions,{,void,check,(,int,x,),{,if,x,>,0,then,{,io,.,writeStr,(,"Positive",),;,},else,{,if,x,<,0,then,{,io,.,writeStr,(,"Negative",),;,},else,{,io,.,writeStr,(,"Zero",),;,},},},},EOF'
     assert Tokenizer(source).get_tokens_as_string() == expected
 
 def test_098():
-    """Complex attribute lists and multiple semicolons"""
-    source = r'''class Attrs { int a, b := 2; ; string s := "ok"; }'''
-    expected = 'class,Attrs,{,int,a,,,b,:=,2,;,;,string,s,:=,"ok",;,},EOF'
+    """Final kitchen-sink example combining multiple features"""
+    source = r'''
+    class KitchenSink {
+        static final string GREETING := "Hello, World!";
+        float[3] points := {1.0, 2.5, 3.0};
+
+        KitchenSink() {
+            # Constructor
+        }
+
+        ~KitchenSink() {
+            # Destructor
+        }
+
+        int & update(int & value) {
+            value := value + 1;
+            return value;
+        }
+
+        void main() {
+            io.writeStrLn(KitchenSink.GREETING);
+            int x := 5;
+            int & y := this.update(x);
+            for i := 0 to 2 do {
+                this.points[i] := this.points[i] * y;
+            }
+        }
+    }
+    '''
+    expected = 'class,KitchenSink,{,static,final,string,GREETING,:=,"Hello, World!",;,float,[,3,],points,:=,{,1.0,,,2.5,,,3.0,},;,KitchenSink,(,),{,},~,KitchenSink,(,),{,},int,&,update,(,int,&,value,),{,value,:=,value,+,1,;,return,value,;,},void,main,(,),{,io,.,writeStrLn,(,KitchenSink,.,GREETING,),;,int,x,:=,5,;,int,&,y,:=,this,.,update,(,x,),;,for,i,:=,0,to,2,do,{,this,.,points,[,i,],:=,this,.,points,[,i,],*,y,;,},},},EOF'
     assert Tokenizer(source).get_tokens_as_string() == expected
 
 def test_099():
