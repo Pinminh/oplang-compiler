@@ -9,10 +9,10 @@ def emit(self):
     tk = self.type
     if tk == self.UNCLOSE_STRING:       
         result = super().emit();
-        raise UncloseString(result.text);
+        raise UncloseString(result.text[1:]);
     elif tk == self.ILLEGAL_ESCAPE:
         result = super().emit();
-        raise IllegalEscape(result.text);
+        raise IllegalEscape(result.text[1:]);
     elif tk == self.ERROR_CHAR:
         result = super().emit();
         raise ErrorToken(result.text); 
@@ -110,7 +110,7 @@ BOOLLIT: TRUE | FALSE ;
 
 // String literals
 STRINGLIT: '"' (ESC | ~["\\\r\n\f])* '"' ;
-fragment ESC: '\\b' | '\\f' | '\\r' | '\\n' | '\\t' | '\\"' | '\\\\'  ;
+fragment ESC: '\\' [bfrnt"\\];
 
 // Identifiers
 ID: [A-Za-z_] [A-Za-z_0-9]* ;
@@ -118,6 +118,6 @@ ID: [A-Za-z_] [A-Za-z_0-9]* ;
 WS : [ \t\r\n\f]+ -> skip ; // skip spaces, tabs, newlines, formfeeds
 
 // Lexical errors
-ILLEGAL_ESCAPE:.;
-UNCLOSE_STRING:.;
-ERROR_CHAR: .;
+ILLEGAL_ESCAPE: '"' (ESC | ~["\\\r\n\f])* '\\' ~[bfrnt"\\] ;
+UNCLOSE_STRING: '"' (ESC | ~["\\\r\n\f])* ;
+ERROR_CHAR: . ;

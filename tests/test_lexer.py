@@ -166,3 +166,90 @@ def test_023():
     source = r""" a & b := 4; ~Destructor() { state := "die" } """
     expected = 'a,&,b,:=,4,;,~,Destructor,(,),{,state,:=,"die",},EOF'
     assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_024():
+    """Test illegal escape sequence in string literals"""
+    source = r""" "Hello,\t\b this the \"first\" string!!" ; "There is \'something\' wrong!!!\f" """
+    expected = r""""Hello,\t\b this the \"first\" string!!",;,Illegal Escape In String: There is \'"""
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_025():
+    """Test unclosed string literals"""
+    source = r""" "\t\"Normal\" \b \\string\r\n\f" "This is unclosed, have fun
+    Tailing texts here..."""
+    expected = r""""\t\"Normal\" \b \\string\r\n\f",Unclosed String: This is unclosed, have fun"""
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_026():
+    """Test unrecognized characters"""
+    source = r""" E := m*c*c "trong đó, E là năng lượng tĩnh" - a ? b """
+    expected = r"""E,:=,m,*,c,*,c,"trong đó, E là năng lượng tĩnh",-,a,Error Token ?"""
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_027():
+    """Test complete class"""
+    source = r"""
+    class Rectangle extends Shape {
+        float getArea() {
+            return this.length * this.width;
+        }
+    }
+    """
+    expected = r"class,Rectangle,extends,Shape,{,float,getArea,(,),{,return,this,.,length,*,this,.,width,;,},},EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_028():
+    """Test complete class"""
+    source = r"""
+    class Shape {
+        static final int numOfShape := 0;
+        final int immuAttribute := 0;
+
+        float length, width;
+        static int getNumOfShape() {
+            return numOfShape;
+        }
+    }
+    """
+    expected = r"class,Shape,{,static,final,int,numOfShape,:=,0,;,final,int,immuAttribute,:=,0,;,float,length,,,width,;,static,int,getNumOfShape,(,),{,return,numOfShape,;,},},EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_029():
+    """Test complete class"""
+    source = r"""
+    class MathUtils {
+        static void swap(int & a; int & b) {
+            int temp := a;
+            a := b;
+            b := temp;
+        }
+    }
+    """
+    expected = r"class,MathUtils,{,static,void,swap,(,int,&,a,;,int,&,b,),{,int,temp,:=,a,;,a,:=,b,;,b,:=,temp,;,},},EOF"
+    assert Tokenizer(source).get_tokens_as_string() == expected
+
+def test_030():
+    """Test complete class"""
+    source = r"""
+    /* Given example here for coding with strings
+    Common operations with strings */
+    class Example extends Code {
+        void main() {
+            string text := "Hello";
+            StringBuilder & builder := new StringBuilder(text);
+            builder.append(" ").append("World").appendLine("!");
+            io.writeStrLn(builder.toString());                      # "Hello World!\n"
+
+        }
+    }
+    """
+    expected = \
+    'class,Example,extends,Code,{,'\
+        'void,main,(,),{,'\
+            'string,text,:=,"Hello",;,'\
+            'StringBuilder,&,builder,:=,new,StringBuilder,(,text,),;,'\
+            'builder,.,append,(," ",),.,append,(,"World",),.,appendLine,(,"!",),;,'\
+            'io,.,writeStrLn,(,builder,.,toString,(,),),;,'\
+        '},'\
+    '},EOF'
+    assert Tokenizer(source).get_tokens_as_string() == expected
