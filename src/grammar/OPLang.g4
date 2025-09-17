@@ -51,8 +51,8 @@ STRING: 'string' ;
 THEN: 'then' ;
 FOR: 'for' ;
 RETURN: 'return' ;
-TRUE: 'true' ;
-FALSE: 'false' ;
+fragment TRUE: 'true' ;
+fragment FALSE: 'false' ;
 VOID: 'void' ;
 NIL: 'nil' ;
 THIS: 'this' ;
@@ -65,8 +65,8 @@ DOWNTO: 'downto' ;
 ADD: '+' ;
 SUB: '-' ;
 MUL: '*' ;
-FLT_DIV: '/' ;
-INT_DIV: '\\' ;
+FLTDIV: '/' ;
+INTDIV: '\\' ;
 MOD: '%' ;
 NEQ: '!=' ;
 EQ: '==' ;
@@ -78,6 +78,7 @@ OR: '||' ;
 AND: '&&' ;
 NOT: '!' ;
 CONCAT: '^' ;
+ASSIGN: ':=' ;
 
 // Separators
 LSB: '[' ;
@@ -95,12 +96,28 @@ COMMA: ',' ;
 TILDE: '~' ;        // for destructor declaration
 AMPERSAND: '&' ;    // for reference declaration
 
+// Integer literals
+INTLIT: [0-9]+ ;
+
+// Float literals
+FLOATLIT: INTPART DECPART? EXPPART | INTPART DECPART ;
+fragment INTPART: [0-9]+ ;
+fragment DECPART: '.' [0-9]* ;
+fragment EXPPART: [eE] [+-]? [0-9]+ ;
+
+// Boolean literals
+BOOLLIT: TRUE | FALSE ;
+
+// String literals
+STRINGLIT: '"' (ESC | ~["\\\r\n\f])* '"' ;
+fragment ESC: '\\b' | '\\f' | '\\r' | '\\n' | '\\t' | '\\"' | '\\\\'  ;
+
 // Identifiers
 ID: [A-Za-z_] [A-Za-z_0-9]* ;
 
 WS : [ \t\r\n\f]+ -> skip ; // skip spaces, tabs, newlines, formfeeds
 
 // Lexical errors
-ERROR_CHAR: .;
 ILLEGAL_ESCAPE:.;
 UNCLOSE_STRING:.;
+ERROR_CHAR: .;
