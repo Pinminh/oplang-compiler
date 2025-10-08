@@ -86,7 +86,7 @@ mulexpr : mulexpr CONCAT conexpr | conexpr ;
 conexpr : NOT conexpr | notexpr ;
 notexpr : (ADD | SUB) notexpr | uniexpr ;
 uniexpr : uniexpr LSB expr RSB | uniexpr DOT ID callargs | idxexpr ;
-idxexpr : NEW idxexpr LP cm_expr_list RP | newexpr ;
+idxexpr : NEW ID LP cm_expr_list RP | newexpr ;
 newexpr : LP expr RP | parexpr ;
 parexpr : lit | ID | THIS | NIL ;
 
