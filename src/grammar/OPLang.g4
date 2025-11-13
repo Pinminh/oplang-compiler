@@ -96,7 +96,8 @@ ne_cm_expr_list: expr COMMA cm_expr_list | expr ;
 
 lit: plit | alit ;
 plit: INTLIT | FLOATLIT | BOOLLIT | STRINGLIT ;
-alit: LB ne_cm_plit_list RB ;
+alit: LB cm_plit_list RB ;
+cm_plit_list: ne_cm_plit_list | ;
 ne_cm_plit_list: plit COMMA ne_cm_plit_list | plit ;
 
 // Statements
