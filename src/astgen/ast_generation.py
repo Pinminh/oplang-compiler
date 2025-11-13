@@ -411,11 +411,18 @@ class ASTGeneration(OPLangVisitor):
 
     # Visit a parse tree produced by OPLangParser#alit.
     def visitAlit(self, ctx:OPLangParser.AlitContext):
-        # alit: LB ne_cm_plit_list RB ;
-        expr_list = self.visit(ctx.ne_cm_plit_list())
+        # alit: LB cm_plit_list RB ;
+        expr_list = self.visit(ctx.cm_plit_list())
         return ArrayLiteral(expr_list)
 
 
+    # Visit a parse tree produced by OPLangParser#Cm_plit_list.
+    def visitCm_plit_list(self, ctx:OPLangParser.Cm_plit_listContext):
+        # cm_plit_list: ne_cm_plit_list | ;
+        if ctx.ne_cm_plit_list():
+            return self.visit(ctx.ne_cm_plit_list())
+        return []
+    
     # Visit a parse tree produced by OPLangParser#ne_cm_plit_list.
     def visitNe_cm_plit_list(self, ctx:OPLangParser.Ne_cm_plit_listContext):
         # ne_cm_plit_list: plit COMMA ne_cm_plit_list | plit ;
